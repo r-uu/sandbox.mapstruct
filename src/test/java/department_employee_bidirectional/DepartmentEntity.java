@@ -1,4 +1,4 @@
-package one2many_bi;
+package department_employee_bidirectional;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -10,12 +10,12 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import one2many_bi.MapStructMapper.MapStructContext;
+import department_employee_bidirectional.MapStructMapper.MapStructContext;
 
 @Slf4j
 //@RequiredArgsConstructor // do not generate required args constructor for @NonNull fields because @NonNull constraint
 // is not guaranteed
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = PROTECTED) // generate no args constructor for jpa, mapstruct, ...
 @Getter()
 @Accessors(fluent = true)
 @ToString
@@ -26,7 +26,7 @@ public class DepartmentEntity
 
 //	//may be null
 //	@EqualsAndHashCode.Exclude
-//	private Set<Many> manies;
+//	private Set<Many> employees;
 
 	/**
 	 * constructor with {@code @NonNull} parameters for each {@code @NonNull} and non {@code final} field, {@link #name}
@@ -38,17 +38,17 @@ public class DepartmentEntity
 		name(name);
 	}
 
-	/** let this be used by mapstruct */
+	/** let this be used by mapstruct (@Default), manually map each immutable (no setter) field */
 	@MapStructMapper.Default
-	public DepartmentEntity(@NonNull DepartmentDTO departmentDTO, @NonNull MapStructContext context)
+	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructContext context)
 	{
-		this(departmentDTO.name());
+		this(department.name());
 		log.debug("context {}", context);
-		// TODO handle manies
+		// TODO handle employees
 	}
 
 //	/** return unmodifiable */
-//	public Set<Many> manies() { return Set.copyOf(manies); }
+//	public Set<Many> employees() { return Set.copyOf(employees); }
 
-//	public boolean add(Many many) { return manies.add(many); }
+//	public boolean add(Many many) { return employees.add(many); }
 }

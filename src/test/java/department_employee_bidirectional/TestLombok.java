@@ -1,4 +1,4 @@
-package one2many_bi;
+package department_employee_bidirectional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -12,9 +12,9 @@ class TestLombok
 {
 	@Test void emptyDepartmentDTO()
 	{
-		DepartmentDTO departmentDTO = new DepartmentDTO();
+		DepartmentDTO department = new DepartmentDTO();
 
-		assertThat(departmentDTO.name(), is(nullValue()));
+		assertThat(department.name(), is(nullValue()));
 	}
 
 	@Test void emptyEmployeeDTO()
@@ -48,8 +48,17 @@ class TestLombok
 	@Test void invalidNameEmployeeDTO()
 	{
 		String name = null;
+		DepartmentDTO department = new DepartmentDTO("name");
 
-		assertThrows(NullPointerException.class, () -> new EmployeeDTO(name));
+		assertThrows(NullPointerException.class, () -> new EmployeeDTO(name, department));
+	}
+
+	@Test void invalidDepartmentEmployeeDTO()
+	{
+		String name = "name";
+		DepartmentDTO department = null;
+
+		assertThrows(NullPointerException.class, () -> new EmployeeDTO(name, department));
 	}
 
 	@Test void invalidNameDepartmentEntity()
@@ -62,11 +71,12 @@ class TestLombok
 	@Test void invalidNameEmployeeEntity()
 	{
 		String name = null;
+		DepartmentEntity department = new DepartmentEntity("name");
 
-		assertThrows(NullPointerException.class, () -> new EmployeeEntity(name));
+		assertThrows(NullPointerException.class, () -> new EmployeeEntity(name, department));
 	}
 
-	@Test void namedDepartmentDTO()
+	@Test void validDepartmentDTO()
 	{
 		String name = "name";
 		DepartmentDTO departmentDTO  = new DepartmentDTO(name);
@@ -74,11 +84,13 @@ class TestLombok
 		assertThat(departmentDTO.name(), is(name));
 	}
 
-	@Test void namedEmployeeDTO()
+	@Test void validEmployeeInDepartmentDTO()
 	{
 		String name = "name";
-		EmployeeDTO employeeDTO  = new EmployeeDTO(name);
+		DepartmentDTO department = new DepartmentDTO(name);
+		EmployeeDTO employee  = new EmployeeDTO(name, department);
 
-		assertThat(employeeDTO.name()  , is(name));
+		assertThat(employee.name(), is(name));
+		assertThat(employee.department(), is(department));
 	}
 }

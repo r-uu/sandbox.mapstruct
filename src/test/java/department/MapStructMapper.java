@@ -1,4 +1,4 @@
-package one2many_bi;
+package department;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.RetentionPolicy.CLASS;
@@ -22,38 +22,22 @@ public interface MapStructMapper
 {
 	MapStructMapper INSTANCE = Mappers.getMapper(MapStructMapper.class);
 
-	DepartmentEntity map(DepartmentDTO departmentDTO, MapStructContext context);
-	DepartmentDTO map(DepartmentEntity departmentEntity, MapStructContext context);
-
-	EmployeeEntity map(EmployeeDTO departmentDTO, MapStructContext context);
-	EmployeeDTO map(EmployeeEntity departmentEntity, MapStructContext context);
+	DepartmentEntity map(DepartmentDTO    department, MapStructContext context);
+	DepartmentDTO    map(DepartmentEntity department, MapStructContext context);
 
 	@ObjectFactory default DepartmentDTO create(
-			@NonNull DepartmentEntity departmentEntity, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentEntity department, @NonNull @Context MapStructContext context)
 	{
-		return new DepartmentDTO(departmentEntity, context);
+		return new DepartmentDTO(department, context);
 	}
 
 	@ObjectFactory default DepartmentEntity create(
-			@NonNull DepartmentDTO departmentDTO, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentDTO department, @NonNull @Context MapStructContext context)
 	{
-		return new DepartmentEntity(departmentDTO, context);
+		return new DepartmentEntity(department, context);
 	}
 
-	@ObjectFactory default EmployeeDTO create(
-			@NonNull EmployeeEntity employeeEntity, @NonNull @Context MapStructContext context)
-	{
-		return new EmployeeDTO(employeeEntity, context);
-	}
-
-	@ObjectFactory default EmployeeEntity create(
-			@NonNull EmployeeDTO employeeDTO, @NonNull @Context MapStructContext context)
-	{
-		return new EmployeeEntity(employeeDTO, context);
-	}
-
-	@ToString
-	class MapStructContext
+	@ToString class MapStructContext
 	{
 		private Map<Object, Object> knownInstances = new IdentityHashMap<Object, Object>();
 
