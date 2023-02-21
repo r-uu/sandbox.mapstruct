@@ -2,6 +2,9 @@ package department_employee_bidirectional;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import static department_employee_bidirectional.MapStructMapper.MapStructContext;
+
+import department_employee_bidirectional.MapStructMapper.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +14,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import department_employee_bidirectional.MapStructMapper.Default;
-import department_employee_bidirectional.MapStructMapper.MapStructContext;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,17 +31,12 @@ public class DepartmentDTO
 //	private Set<EmployeeDTO> employees;
 
 	/**
-	 * constructor with {@code @NonNull} parameters for each {@code @NonNull} and non {@code final} field, {@link #name}
-	 * in this case
-	 * <p>use this as common client of this class
+	 * let this be used by mapstruct (@Default, @ObjectFactory) and make sure to manually call required args constructor
+	 * @param department incoming entity to be used for construction of instance
+	 * @param context incoming context to properly handling cyclic dependencies
 	 */
-//	public DepartmentDTO(@NonNull String name)
-//	{
-//		name(name);
-//	}
-
-	/** let this be used by mapstruct (@Default), manually map each immutable (no setter) field */
-	@Default public DepartmentDTO(@NonNull DepartmentEntity department, @NonNull MapStructContext context)
+	@Default // necessary make sure mapstruct does not use no-args-constructor
+	public DepartmentDTO(@NonNull DepartmentEntity department, @NonNull MapStructContext context)
 	{
 		this(department.name());
 		log.debug("context {}", context);
@@ -50,7 +46,7 @@ public class DepartmentDTO
 	}
 
 //	/** return unmodifiable */
-//	public Set<Many> manies() { return Set.copyOf(manies); }
+//	public Set<Many> employees() { return Set.copyOf(employees); }
 
-//	public boolean add(Many many) { return manies.add(many); }
+//	public boolean add(Employee employee) { return employees.add(employee); }
 }

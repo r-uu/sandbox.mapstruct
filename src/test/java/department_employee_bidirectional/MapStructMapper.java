@@ -22,48 +22,49 @@ public interface MapStructMapper
 {
 	MapStructMapper INSTANCE = Mappers.getMapper(MapStructMapper.class);
 
-	DepartmentEntity map(DepartmentDTO departmentDTO, MapStructContext context);
-	DepartmentDTO map(DepartmentEntity departmentEntity, MapStructContext context);
+	DepartmentEntity map(DepartmentDTO    department, MapStructContext context);
+	DepartmentDTO    map(DepartmentEntity department, MapStructContext context);
 
-	EmployeeEntity map(EmployeeDTO employeeDTO, MapStructContext context);
-	EmployeeDTO map(EmployeeEntity employeeEntity, MapStructContext context);
+	EmployeeEntity map(EmployeeDTO    employee, MapStructContext context);
+	EmployeeDTO    map(EmployeeEntity employee, MapStructContext context);
 
 	@ObjectFactory default DepartmentDTO create(
-			@NonNull DepartmentEntity departmentEntity, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentEntity department, @NonNull @Context MapStructContext context)
 	{
-		return new DepartmentDTO(departmentEntity, context);
+		return new DepartmentDTO(department, context);
 	}
 
 	@ObjectFactory default DepartmentEntity create(
-			@NonNull DepartmentDTO departmentDTO, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentDTO department, @NonNull @Context MapStructContext context)
 	{
-		return new DepartmentEntity(departmentDTO, context);
+		return new DepartmentEntity(department, context);
 	}
 
 	@ObjectFactory default EmployeeDTO create(
-			@NonNull EmployeeEntity employeeEntity, @NonNull @Context MapStructContext context)
+			@NonNull EmployeeEntity employee, @NonNull @Context MapStructContext context)
 	{
-		return new EmployeeDTO(employeeEntity, context);
+		return new EmployeeDTO(employee, context);
 	}
 
 	@ObjectFactory default EmployeeEntity create(
-			@NonNull EmployeeDTO employeeDTO, @NonNull @Context MapStructContext context)
+			@NonNull EmployeeDTO employee, @NonNull @Context MapStructContext context)
 	{
-		return new EmployeeEntity(employeeDTO, context);
+		return new EmployeeEntity(employee, context);
 	}
 
-	@ToString
-	class MapStructContext
+	@ToString class MapStructContext
 	{
 		private Map<Object, Object> knownInstances = new IdentityHashMap<Object, Object>();
 
 		@BeforeMapping
-		public <T> T getMappedInstance(Object source, @TargetType Class<T> targetType) {
+		public <T> T getMappedInstance(Object source, @TargetType Class<T> targetType)
+		{
 			return (T) knownInstances.get( source );
 		}
 
 		@BeforeMapping
-		public void storeMappedInstance(Object source, @MappingTarget Object target) {
+		public void storeMappedInstance(Object source, @MappingTarget Object target)
+		{
 			knownInstances.put( source, target );
 		}
 	}

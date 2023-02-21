@@ -2,19 +2,14 @@ package department_employee_bidirectional;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
+import department_employee_bidirectional.MapStructMapper.Default;
+import department_employee_bidirectional.MapStructMapper.MapStructContext;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import department_employee_bidirectional.MapStructMapper.MapStructContext;
 
 @Slf4j
-//@RequiredArgsConstructor // do not generate required args constructor for @NonNull fields because @NonNull constraint
-// is not guaranteed
+@RequiredArgsConstructor
 @NoArgsConstructor(access = PROTECTED) // generate no args constructor for jpa, mapstruct, ...
 @Getter()
 @Accessors(fluent = true)
@@ -29,17 +24,11 @@ public class DepartmentEntity
 //	private Set<Many> employees;
 
 	/**
-	 * constructor with {@code @NonNull} parameters for each {@code @NonNull} and non {@code final} field, {@link #name}
-	 * in this case
-	 * <p>use this as common client of this class
+	 * let this be used by mapstruct (@Default, @ObjectFactory) and make sure to manually call required args constructor
+	 * @param department incoming DTO to be used for construction of instance
+	 * @param context incoming context to properly handling cyclic dependencies
 	 */
-	public DepartmentEntity(@NonNull String name)
-	{
-		name(name);
-	}
-
-	/** let this be used by mapstruct (@Default), manually map each immutable (no setter) field */
-	@MapStructMapper.Default
+	@Default // necessary make sure mapstruct does not use no-args-constructor
 	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructContext context)
 	{
 		this(department.name());
