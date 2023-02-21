@@ -1,5 +1,6 @@
 package department_employee_bidirectional;
 
+import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import static department_employee_bidirectional.MapStructMapper.MapStructContext;
@@ -15,6 +16,9 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Slf4j
 @RequiredArgsConstructor
 @NoArgsConstructor(access = PROTECTED) // generate no args constructor for jsonb, jaxb, mapstruct, ...
@@ -26,9 +30,9 @@ public class DepartmentDTO
 {
 	@NonNull @Setter private String name;
 
-//	/** may be null to indicate that manies are not yet loaded */
-//	@EqualsAndHashCode.Exclude
-//	private Set<EmployeeDTO> employees;
+	/** may be null to indicate that employees are not yet loaded */
+	@EqualsAndHashCode.Exclude
+	private Set<EmployeeDTO> employees;
 
 	/**
 	 * let this be used by mapstruct (@Default, @ObjectFactory) and make sure to manually call required args constructor
@@ -40,13 +44,28 @@ public class DepartmentDTO
 	{
 		this(department.name());
 		log.debug("context {}", context);
-		// TODO handle manies
 
-//		if (isNull(department.manies()) == false) { manies = new HashSet<>(manies); }
+		if (isNull(department.employees()) == false)
+		{
+			employees = new HashSet<>();
+		}
+
+		// TODO no, we should use a mapstruct mapper for that
+		department.employees().forEach(e -> add(new EmployeeDTO(e, context)));
 	}
 
-//	/** return unmodifiable */
-//	public Set<Many> employees() { return Set.copyOf(employees); }
+	/** return unmodifiable */
+	public Set<EmployeeDTO> employees()
+	{
+		if (isNull(employees)) return null;
+		return Set.copyOf(employees);
+	}
 
-//	public boolean add(Employee employee) { return employees.add(employee); }
+	public boolean add(EmployeeDTO employee) { return nonNullEmployees().add(employee); }
+
+	private Set<EmployeeDTO> nonNullEmployees()
+	{
+		if (isNull(employees)) return new HashSet<>();
+		return employees;
+	}
 }

@@ -8,6 +8,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Set;
+
 @Slf4j
 @RequiredArgsConstructor
 @NoArgsConstructor(access = PROTECTED) // generate no args constructor for jpa, mapstruct, ...
@@ -19,9 +21,9 @@ public class DepartmentEntity
 {
 	@NonNull @Setter private String name;
 
-//	//may be null
-//	@EqualsAndHashCode.Exclude
-//	private Set<Many> employees;
+	/** may be null to indicate that employees are not yet loaded */
+	@EqualsAndHashCode.Exclude
+	private Set<EmployeeEntity> employees;
 
 	/**
 	 * let this be used by mapstruct (@Default, @ObjectFactory) and make sure to manually call required args constructor
