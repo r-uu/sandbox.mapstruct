@@ -37,6 +37,7 @@ public class EmployeeDTO
 	{
 		name(name);
 		department(department);
+		department.add(this);
 	}
 
 	/** let this be used by mapstruct, manually map each immutable (no setter) field */

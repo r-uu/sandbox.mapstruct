@@ -47,11 +47,9 @@ public class DepartmentDTO
 
 		if (isNull(department.employees()) == false)
 		{
-			employees = new HashSet<>();
+			// TODO no, we should use a mapstruct mapper for that
+			department.employees().forEach(e -> add(new EmployeeDTO(e, context)));
 		}
-
-		// TODO no, we should use a mapstruct mapper for that
-		department.employees().forEach(e -> add(new EmployeeDTO(e, context)));
 	}
 
 	/** return unmodifiable */
@@ -61,7 +59,13 @@ public class DepartmentDTO
 		return Set.copyOf(employees);
 	}
 
-	public boolean add(EmployeeDTO employee) { return nonNullEmployees().add(employee); }
+	// TODO do not expose add and remove but set(Department)
+	public boolean add(@NonNull EmployeeDTO employee) { return nonNullEmployees().add(employee); }
+	public boolean remove(@NonNull EmployeeDTO employee)
+	{
+		if (isNull(employees)) return false;
+		return employees.remove(employee);
+	}
 
 	private Set<EmployeeDTO> nonNullEmployees()
 	{
