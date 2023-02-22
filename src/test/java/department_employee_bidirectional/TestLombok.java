@@ -2,7 +2,6 @@ package department_employee_bidirectional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,28 +13,28 @@ class TestLombok
 	{
 		DepartmentDTO department = new DepartmentDTO();
 
-		assertThat(department.name(), is(nullValue()));
+		assertThat(department.getName(), is(nullValue()));
 	}
 
 	@Test void emptyEmployeeDTO()
 	{
 		EmployeeDTO employeeDTO = new EmployeeDTO();
 
-		assertThat(employeeDTO.name(), is(nullValue()));
+		assertThat(employeeDTO.getName(), is(nullValue()));
 	}
 
 	@Test void emptyDepartmentEntity()
 	{
 		DepartmentEntity departmentEntity = new DepartmentEntity();
 
-		assertThat(departmentEntity.name(), is(nullValue()));
+		assertThat(departmentEntity.getName(), is(nullValue()));
 	}
 
 	@Test void emptyEmployeeEntity()
 	{
 		EmployeeEntity employeeEntity = new EmployeeEntity();
 
-		assertThat(employeeEntity.name(), is(nullValue()));
+		assertThat(employeeEntity.getName(), is(nullValue()));
 	}
 
 	@Test void invalidNameDepartmentDTO()
@@ -81,7 +80,7 @@ class TestLombok
 		String name = "name";
 		DepartmentDTO departmentDTO  = new DepartmentDTO(name);
 
-		assertThat(departmentDTO.name(), is(name));
+		assertThat(departmentDTO.getName(), is(name));
 	}
 
 	@Test void validEmployeeInDepartmentDTO()
@@ -90,7 +89,7 @@ class TestLombok
 		DepartmentDTO department = new DepartmentDTO(name);
 		EmployeeDTO employee  = new EmployeeDTO(name, department);
 
-		assertThat(employee.name(), is(name));
-		assertThat(employee.department(), is(department));
+		assertThat(employee.getName()      , is(name));
+		assertThat(employee.getDepartment(), is(department));
 	}
 }

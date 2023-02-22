@@ -22,37 +22,37 @@ public interface MapStructMapper
 {
 	MapStructMapper INSTANCE = Mappers.getMapper(MapStructMapper.class);
 
-	DepartmentEntity map(DepartmentDTO    department, MapStructContext context);
-	DepartmentDTO    map(DepartmentEntity department, MapStructContext context);
+	DepartmentEntity map(DepartmentDTO    department, MapStructCycleTrackingContext context);
+	DepartmentDTO    map(DepartmentEntity department, MapStructCycleTrackingContext context);
 
-	EmployeeEntity map(EmployeeDTO    employee, MapStructContext context);
-	EmployeeDTO    map(EmployeeEntity employee, MapStructContext context);
+	EmployeeEntity map(EmployeeDTO    employee, MapStructCycleTrackingContext context);
+	EmployeeDTO    map(EmployeeEntity employee, MapStructCycleTrackingContext context);
 
 	@ObjectFactory default DepartmentDTO create(
-			@NonNull DepartmentEntity department, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentEntity department, @NonNull @Context MapStructMapper.MapStructCycleTrackingContext context)
 	{
 		return new DepartmentDTO(department, context);
 	}
 
 	@ObjectFactory default DepartmentEntity create(
-			@NonNull DepartmentDTO department, @NonNull @Context MapStructContext context)
+			@NonNull DepartmentDTO department, @NonNull @Context MapStructMapper.MapStructCycleTrackingContext context)
 	{
 		return new DepartmentEntity(department, context);
 	}
 
 	@ObjectFactory default EmployeeDTO create(
-			@NonNull EmployeeEntity employee, @NonNull @Context MapStructContext context)
+			@NonNull EmployeeEntity employee, @NonNull @Context MapStructMapper.MapStructCycleTrackingContext context)
 	{
 		return new EmployeeDTO(employee, context);
 	}
 
 	@ObjectFactory default EmployeeEntity create(
-			@NonNull EmployeeDTO employee, @NonNull @Context MapStructContext context)
+			@NonNull EmployeeDTO employee, @NonNull @Context MapStructMapper.MapStructCycleTrackingContext context)
 	{
 		return new EmployeeEntity(employee, context);
 	}
 
-	@ToString class MapStructContext
+	@ToString class MapStructCycleTrackingContext
 	{
 		private Map<Object, Object> knownInstances = new IdentityHashMap<Object, Object>();
 

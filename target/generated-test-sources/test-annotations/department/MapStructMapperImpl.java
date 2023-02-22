@@ -4,7 +4,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-21T19:34:44+0100",
+    date = "2023-02-22T15:29:44+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 19.0.1 (GraalVM Community)"
 )
 public class MapStructMapperImpl implements MapStructMapper {

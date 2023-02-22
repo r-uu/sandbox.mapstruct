@@ -43,6 +43,6 @@ class TestLombok
 		String name = "name";
 		department_employee_bidirectional.DepartmentDTO departmentDTO  = new department_employee_bidirectional.DepartmentDTO(name);
 
-		assertThat(departmentDTO.name(), is(name));
+		assertThat(departmentDTO.getName(), is(name));
 	}
 }

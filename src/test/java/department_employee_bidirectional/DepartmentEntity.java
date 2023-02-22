@@ -1,20 +1,25 @@
 package department_employee_bidirectional;
 
+import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PROTECTED;
 
 import department_employee_bidirectional.MapStructMapper.Default;
-import department_employee_bidirectional.MapStructMapper.MapStructContext;
-import lombok.*;
-import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
-
+import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 @NoArgsConstructor(access = PROTECTED) // generate no args constructor for jpa, mapstruct, ...
 @Getter()
-@Accessors(fluent = true)
+//@Accessors(fluent = true)
 @ToString
 @EqualsAndHashCode
 public class DepartmentEntity
@@ -31,15 +36,59 @@ public class DepartmentEntity
 	 * @param context incoming context to properly handling cyclic dependencies
 	 */
 	@Default // necessary make sure mapstruct does not use no-args-constructor
-	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructContext context)
+	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructMapper.MapStructCycleTrackingContext context)
 	{
-		this(department.name());
+		this(department.getName());
 		log.debug("context {}", context);
-		// TODO handle employees
+
+		if (isNull(department.employees()) == false)
+		{
+			// TODO no, we should use a mapstruct mapper for that
+			department.employees().forEach(e -> add(new EmployeeEntity(e, context)));
+		}
 	}
 
-//	/** return unmodifiable */
-//	public Set<Many> employees() { return Set.copyOf(employees); }
+	/** return unmodifiable */
+	public Set<EmployeeEntity> employees()
+	{
+		if (isNull(employees)) return null;
+		return Set.copyOf(employees);
+	}
 
-//	public boolean add(Many many) { return employees.add(many); }
+	public boolean add(@NonNull EmployeeEntity employee)
+	{
+		if (employee.getDepartment() == this)
+		{
+			if (employeesContains(employee)) return true;
+			return nonNullEmployees().add(employee);
+		}
+		else
+		{
+			// following check should never return true
+			if (employeesContains(employee))
+				log.error("employee with {} is already contained in {}", employee.getDepartment(), this);
+
+			// assign this department as department of employee and update employees
+			employee.setDepartment(this);
+			return nonNullEmployees().add(employee);
+		}
+	}
+
+	public boolean remove(@NonNull EmployeeEntity employee)
+	{
+		if (isNull(employees)) return false;
+		return employees.remove(employee);
+	}
+
+	private Set<EmployeeEntity> nonNullEmployees()
+	{
+		if (isNull(employees)) return new HashSet<>();
+		return employees;
+	}
+
+	private boolean employeesContains(EmployeeEntity employee)
+	{
+		if (isNull(employees)) return false;
+		return employees.contains(employee);
+	}
 }

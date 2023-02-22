@@ -3,9 +3,9 @@ package department_employee_bidirectional;
 import static java.util.Objects.isNull;
 import static lombok.AccessLevel.PROTECTED;
 
-import static department_employee_bidirectional.MapStructMapper.MapStructContext;
-
 import department_employee_bidirectional.MapStructMapper.Default;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,17 +13,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
 @NoArgsConstructor(access = PROTECTED) // generate no args constructor for jsonb, jaxb, mapstruct, ...
 @Getter
-@Accessors(fluent = true)
+//@Accessors(fluent = true)
 @ToString
 @EqualsAndHashCode
 public class DepartmentDTO
@@ -39,10 +35,10 @@ public class DepartmentDTO
 	 * @param department incoming entity to be used for construction of instance
 	 * @param context incoming context to properly handling cyclic dependencies
 	 */
-	@Default // necessary make sure mapstruct does not use no-args-constructor
-	public DepartmentDTO(@NonNull DepartmentEntity department, @NonNull MapStructContext context)
+	@Default // necessary, seems to make sure mapstruct does not use no-args-constructor
+	public DepartmentDTO(@NonNull DepartmentEntity department, @NonNull MapStructMapper.MapStructCycleTrackingContext context)
 	{
-		this(department.name());
+		this(department.getName());
 		log.debug("context {}", context);
 
 		if (isNull(department.employees()) == false)
@@ -59,8 +55,25 @@ public class DepartmentDTO
 		return Set.copyOf(employees);
 	}
 
-	// TODO do not expose add and remove but set(Department)
-	public boolean add(@NonNull EmployeeDTO employee) { return nonNullEmployees().add(employee); }
+	public boolean add(@NonNull EmployeeDTO employee)
+	{
+		if (employee.getDepartment() == this)
+		{
+			if (employeesContains(employee)) return true;
+			return nonNullEmployees().add(employee);
+		}
+		else
+		{
+			// following check should never return true
+			if (employeesContains(employee))
+				log.error("employee with {} is already contained in {}", employee.getDepartment(), this);
+
+			// assign this department as department of employee and update employees
+			employee.department(this);
+			return nonNullEmployees().add(employee);
+		}
+	}
+
 	public boolean remove(@NonNull EmployeeDTO employee)
 	{
 		if (isNull(employees)) return false;
@@ -71,5 +84,11 @@ public class DepartmentDTO
 	{
 		if (isNull(employees)) return new HashSet<>();
 		return employees;
+	}
+
+	private boolean employeesContains(EmployeeDTO employee)
+	{
+		if (isNull(employees)) return false;
+		return employees.contains(employee);
 	}
 }
