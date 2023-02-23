@@ -2,13 +2,14 @@ package department_employee_bidirectional;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.annotation.processing.Generated;
 
+/*
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-22T15:29:44+0100",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 19.0.1 (GraalVM Community)"
+    date = "2023-02-23T11:53:31+0100",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 1.4.300.v20221108-0856, environment: Java 19.0.1 (GraalVM Community)"
 )
+*/
 public class MapStructMapperImpl implements MapStructMapper {
 
     @Override
