@@ -6,6 +6,8 @@ import static lombok.AccessLevel.PROTECTED;
 import department_employee_bidirectional.MapStructMapper.Default;
 import java.util.HashSet;
 import java.util.Set;
+
+import department_employee_bidirectional.MapStructMapper.MapStructCycleTrackingContext;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +37,8 @@ public class DepartmentEntity
 	 * @param department incoming DTO to be used for construction of instance
 	 * @param context incoming context to properly handling cyclic dependencies
 	 */
-	@Default // necessary make sure mapstruct does not use no-args-constructor
-	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructMapper.MapStructCycleTrackingContext context)
+	@Default // necessary, makes sure mapstruct does not use no-args-constructor
+	public DepartmentEntity(@NonNull DepartmentDTO department, @NonNull MapStructCycleTrackingContext context)
 	{
 		this(department.getName());
 		log.debug("context {}", context);

@@ -2,6 +2,8 @@ package department_employee_bidirectional;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import department_employee_bidirectional.MapStructMapper.Default;
+import department_employee_bidirectional.MapStructMapper.MapStructCycleTrackingContext;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,8 +39,8 @@ public class EmployeeEntity
 	}
 
 	/** let this be used by mapstruct, manually map each immutable (no setter) field */
-	@MapStructMapper.Default
-	public EmployeeEntity(@NonNull EmployeeDTO employee, @NonNull MapStructMapper.MapStructCycleTrackingContext context)
+	@Default // necessary, makes sure mapstruct does not use no-args-constructor
+	public EmployeeEntity(@NonNull EmployeeDTO employee, @NonNull MapStructCycleTrackingContext context)
 	{
 		this(employee.getName(), new DepartmentEntity(employee.getDepartment(), context));
 		log.debug("context {}", context);
